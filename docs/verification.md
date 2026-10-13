@@ -7,8 +7,9 @@ python3 -m unittest discover -s tests -v
 bash -n scripts/bootstrap.sh
 ```
 
-10 Tests bestanden. Die Tests laufen ausschließlich in temporären Verzeichnissen:
+11 Tests bestanden. Die Tests laufen ausschließlich in temporären Verzeichnissen:
 
+- Persönlicher Marken-Skill mit funktionierendem relativem Paketeinstieg, global und im Projekt installiert. Bestehende persönliche Skills bleiben bei Konflikten unverändert; Wiederholung verändert den Skill nicht.
 - Vollständiges Paket einschließlich Komponenten, Fonts-/Asset-Verzeichnissen, Vorschau und Evidenz kopiert. SHA-256-Dateiliste geprüft.
 - Globale und projektbezogene Einbindung. Bestehende Regeltexte bleiben byte-identisch erhalten; wiederholte Installation ändert weder Inhalt noch Dateizeitpunkte.
 - Abweichende vorhandene Pakete, Skill-Dateien und Regelblöcke werden abgelehnt. Fehlende Abnahme und falscher Scope ebenfalls.

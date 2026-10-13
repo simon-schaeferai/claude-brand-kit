@@ -2,7 +2,7 @@
 
 ![Geprüfter Installer und vollständige Test-Fixture](docs/teaser.png)
 
-Ein Claude-Code-Skill, der deine eigene Website als Quelle liest und daraus ein lokales Markenpaket erstellt. Mit Regeln, Charakter, Tokens, Schriften, Logo/Assets und wiederverwendbaren Komponenten. Du prüfst den Entwurf, bevor Claude ihn dauerhaft einbindet.
+Ein Claude-Code-Skill, der deine eigene Website als Quelle liest und daraus ein lokales Markenpaket erstellt. Mit Regeln, Charakter, Tokens, Schriften, Logo/Assets und wiederverwendbaren Komponenten. Du prüfst den Entwurf, bevor Claude ihn dauerhaft einbindet und deinen persönlichen Marken-Skill erstellt.
 
 ## Start
 
@@ -29,6 +29,8 @@ Später direkt in Claude Code:
 - **`SKILL.md`** steuert Extraktion und Abnahme, ohne Claude Design oder DesignSync.
 - **`references/`** definiert Evidenz und vollständiges Markenpaket.
 - **`scripts/install.py`** prüft Dateien, Hashes und lokale Verweise. Es installiert das ganze Paket und ergänzt `CLAUDE.md`.
+
+Zusätzlich erhältst du einen eigenen Skill `/<marke>-brand`, ähnlich einem persönlichen Markenhandbuch für Claude. Der Regelblock lädt ihn vor Visual-Arbeit für deine Marke. `brand-setup` bleibt für die Einrichtung zuständig.
 
 Global liegt dein Paket unter `~/.claude/brands/<marke>/`, projektspezifisch unter `.claude/brands/<marke>/`. Bestehende Regeln bleiben erhalten. Identische Wiederholungen ändern nichts; abweichende bestehende Pakete werden nicht überschrieben. Mehrere Marken werden nach Absender gewählt, Konflikte werden zur Klärung vorgelegt.
 

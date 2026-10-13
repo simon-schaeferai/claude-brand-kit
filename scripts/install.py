@@ -69,7 +69,7 @@ def validate(source):
     m = read_manifest(root)
     if m.get('schema_version') != 1 or not re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', m.get('slug', '')):
         fail('Schema/Slug ungültig')
-    if len(m['slug']) > 64 or not m.get('brand_name') or not m.get('created_at'):
+    if len(m['slug']) > 58 or not m.get('brand_name') or not m.get('created_at'):
         fail('Metadaten unvollständig')
     if any(c in m['brand_name'] for c in '\r\n<>') or len(m['brand_name']) > 200:
         fail('Markenname enthält unzulässige Zeichen')
@@ -166,15 +166,37 @@ def install_kit(args):
         base = args.home.resolve() / '.claude'
         rules = base / 'CLAUDE.md'
     dest = base / 'brands' / m['slug']
+    skill_name = m['slug'] + '-brand'
+    skill_dest = base / 'skills' / skill_name
+    relative_pack = Path(os.path.relpath(dest, skill_dest)).as_posix()
+    description = json.dumps(f'Verwendet das freigegebene Markenpaket von {m["brand_name"]} für Gestaltung und Visual-Arbeit mit dieser Absendermarke.', ensure_ascii=False)
+    skill = (f'---\nname: {skill_name}\ndescription: {description}\n---\n\n'
+             f'# {m["brand_name"]}\n\n'
+             'Vor Gestaltung zuerst den Absender bestimmen. Für diese Marke zuerst '
+             f'[{m["brand_name"]}: Markenpaket]({relative_pack}/brand.md), '
+             f'[Markenregeln]({relative_pack}/rules/brand-guide.md) und '
+             f'[Vorlieben]({relative_pack}/rules/preferences.md) lesen. '
+             'Alle Verweise relativ zu diesem SKILL.md auflösen.\n\n'
+             f'Für HTML {relative_pack}/tokens/fonts.css, {relative_pack}/tokens/tokens.css '
+             f'und {relative_pack}/components/components.css gemeinsam einbinden. '
+             f'Fonts aus {relative_pack}/fonts/ und Logo/Assets aus {relative_pack}/assets/ '
+             'mit korrekten lokalen Verweisen und ihren Lizenzhinweisen verwenden. '
+             'Bei einzelnen Artefakten einbetten oder gemeinsam ausliefern.\n\n'
+             'Andere Absendermarken behalten ihre eigenen Vorgaben. Keine Preise, '
+             'Versprechen oder Kundenstimmen aus der Quellwebsite übernehmen. '
+             'Bei Konflikten nachfragen. Änderungen am Markenpaket erst nach '
+             'konkreter Abnahme. Die Quellwebsite nicht automatisch umbauen.\n')
     # Keine indirekten Writes durch vorhandene Symlinks.
-    for p in [base, base.parent, dest.parent, dest, rules]:
+    for p in [base, base.parent, dest.parent, dest, rules, skill_dest.parent, skill_dest]:
         if p.is_symlink():
             fail(f'Symlink-Ziel wird nicht verändert: {p}')
     begin = f'<!-- brand-setup:{m["slug"]}:begin -->'
     end = f'<!-- brand-setup:{m["slug"]}:end -->'
     block = (f'{begin}\n'
              f'Für Branding-Arbeit zuerst den Absender bestimmen. Für {m["brand_name"]} '
-             f'das Markenpaket unter {dest / "brand.md"} lesen und dessen Regeln, '
+             f'vor Visual-Arbeit den persönlichen Skill /{skill_name} laden '
+             f'({skill_dest / "SKILL.md"}) und das Markenpaket unter '
+             f'{dest / "brand.md"} lesen. Dessen Regeln, '
              'Tokens, Fonts, Assets und Komponenten verwenden. Für andere Marken deren '
              'eigene Vorgaben verwenden. Bei mehreren passenden Marken oder Konflikten '
              'nachfragen. Die Quellwebsite nicht automatisch umbauen.\n'
@@ -186,6 +208,9 @@ def install_kit(args):
         new = old
     else:
         new = old + ('\n\n' if old else '') + block + '\n'
+    if skill_dest.exists():
+        if inventory(skill_dest, restricted=False) != {'SKILL.md': hashlib.sha256(skill.encode('utf-8')).hexdigest()}:
+            fail(f'Bestehender persönlicher Skill bleibt unverändert: {skill_dest}')
     if dest.exists():
         if inventory(dest) != inventory(args.source.resolve()):
             fail(f'Bestehendes Markenpaket bleibt unverändert: {dest}')
@@ -199,9 +224,18 @@ def install_kit(args):
         finally:
             if stage.exists():
                 shutil.rmtree(stage)
+    if not skill_dest.exists():
+        skill_dest.parent.mkdir(parents=True, exist_ok=True)
+        stage = Path(tempfile.mkdtemp(dir=skill_dest.parent, prefix='.brand-skill-'))
+        try:
+            (stage / 'SKILL.md').write_text(skill, encoding='utf-8')
+            stage.rename(skill_dest)
+        finally:
+            if stage.exists():
+                shutil.rmtree(stage)
     if new != old:
         atomic_write(rules, new.encode('utf-8'))
-    print(f'Markenpaket geprüft und installiert: {dest}\nRegeln: {rules}')
+    print(f'Markenpaket geprüft und installiert: {dest}\nPersönlicher Skill: /{skill_name} ({skill_dest})\nRegeln: {rules}')
 
 
 def main():

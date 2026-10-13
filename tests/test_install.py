@@ -57,8 +57,12 @@ class InstallerTests(unittest.TestCase):
         self.install('--approved')
         dest = self.home / '.claude/brands/fixture-brand'
         self.assertEqual(installer.inventory(dest), installer.inventory(self.kit))
+        personal = self.home / '.claude/skills/fixture-brand-brand/SKILL.md'
+        self.assertTrue(personal.is_file())
+        self.assertIn('../../brands/fixture-brand/brand.md', personal.read_text())
+        self.assertIn('/fixture-brand-brand', rules.read_text())
         before = rules.read_bytes()
-        stamps = {p: p.stat().st_mtime_ns for p in [rules, *dest.rglob('*')]}
+        stamps = {p: p.stat().st_mtime_ns for p in [rules, personal, *dest.rglob('*')]}
         self.install('--approved')
         self.assertEqual(rules.read_bytes(), before)
         self.assertTrue(before.startswith(b'Eigene vorhandene Regeln.\n'))
@@ -93,6 +97,16 @@ class InstallerTests(unittest.TestCase):
         self.assertEqual((project / 'CLAUDE.md').read_text().count(':begin -->'), 1)
         self.assertTrue((project / '.claude/brands/fixture-brand/components/components.css').is_file())
         self.assertFalse((self.home / '.claude').exists())
+        self.assertTrue((project / '.claude/skills/fixture-brand-brand/SKILL.md').is_file())
+
+    def test_personal_skill_conflict_preserves_all_existing_files(self):
+        skill = self.home / '.claude/skills/fixture-brand-brand/SKILL.md'
+        skill.parent.mkdir(parents=True)
+        skill.write_text('Existing personal skill')
+        self.install('--approved', ok=False)
+        self.assertEqual(skill.read_text(), 'Existing personal skill')
+        self.assertFalse((self.home / '.claude/brands').exists())
+        self.assertFalse((self.home / '.claude/CLAUDE.md').exists())
 
     def test_missing_modified_extra_files(self):
         (self.kit / 'tokens/tokens.css').unlink()

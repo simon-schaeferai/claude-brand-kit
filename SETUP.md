@@ -24,6 +24,6 @@ Alternativ nur in einem Projekt: klone dieses Repo in dessen noch nicht vorhande
 
 Ein neues Gespräch lädt den ergänzten CLAUDE.md-Block. Nutze beispielsweise: „Erstelle eine kleine Beispielseite für meine Marke mit dem installierten Markenpaket.“ Kundenmarken behalten ihre eigenen Vorgaben.
 
-Zur Entfernung: den markierten `brand-setup:<slug>`-Block aus der jeweiligen CLAUDE.md entfernen und das entsprechende Markenpaket löschen, nachdem benötigte Dateien gesichert sind. Andere Regeln nicht entfernen. Den Skill separat unter `~/.claude/skills/brand-setup` entfernen.
+Zur Entfernung: den markierten `brand-setup:<slug>`-Block aus der jeweiligen CLAUDE.md entfernen und das entsprechende Markenpaket löschen, nachdem benötigte Dateien gesichert sind. Den zugehörigen persönlichen Skill unter `.claude/skills/<slug>-brand/` ebenfalls entfernen. Andere Regeln und Skills nicht entfernen. Den Skill separat unter `~/.claude/skills/brand-setup` entfernen.
 
 Es werden keine Website-Änderungen veröffentlicht, keine Zugangsdaten gespeichert und keine Nutzerdaten an dieses GitHub-Repo übertragen. Website-Abfragen und Claude-Code-Nutzung unterliegen den normalen Werkzeugen und Einstellungen deiner Claude-Sitzung.
