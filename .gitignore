@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+.venv/
+output/
+kit/
+brand-work/
+*.mp4
+*.mov
+*.wav
+*.webm
+*.zip
