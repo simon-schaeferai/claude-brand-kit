@@ -18,6 +18,8 @@ bash -n scripts/bootstrap.sh
 
 Das README-Bild zeigt den echten Testlauf und den tatsächlichen Dateibestand einer ausdrücklich fiktiven Testmarke. Die Test-Fixture prüft Dateimechanik, keine Designqualität.
 
+Nach Veröffentlichung zusätzlich geprüft: Der exakte öffentliche curl/Bash-Startbefehl lädt das echte GitHub-Repo und installiert den Skill zweimal in einem isolierten Home. Nur der Claude-Prozess wurde simuliert; URL-Übergabe und Arbeitsordner wurden geprüft. Der veröffentlichte Installer hat außerdem das vollständige Testpaket samt persönlichem Marken-Skill installiert; Skill-Format und alle relativen Markdown-Links wurden geprüft. GitHub bestätigt PUBLIC und MIT, beide Commit-Autoren verwenden noreply-Adressen.
+
 Nicht als getestet behauptet: vollständige Website-Extraktion durch einen live gestarteten Claude-Agenten, Freundes-Website, lizenzierte Schriftbeschaffung, jedes Betriebssystem oder jede Website. Die Bootstrap-Eingabe über ein echtes interaktives Terminal erfordert den Nutzer. Markenqualität und verfügbare Browser-Werkzeuge bleiben Teil der späteren Abnahme.
 
 Der Installer ist ein Integritätsprüfer, kein vollständiger Malware-/Secret-Scanner. Der Agent muss Inhalte und Nutzungsrechte vor der Installation prüfen. Idempotenz bedeutet: identischer Bestand wird bewahrt; Versionsupdates werden bewusst separat behandelt. Gleichzeitige Installationen sind nicht vorgesehen.
